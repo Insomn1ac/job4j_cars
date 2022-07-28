@@ -16,6 +16,12 @@ public class Car {
     @JoinColumn(name = "engine_id", foreignKey = @ForeignKey(name = "ENGINE_ID_FK"))
     private Engine engine;
 
+    @Column(name = "car_brand")
+    private String carBrand;
+
+    @Column(name = "body_type")
+    private String bodyType;
+
     @ManyToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE})
     @JoinTable(name = "history_owner", joinColumns = {
             @JoinColumn(name = "driver_id", nullable = false, updatable = false)},
@@ -45,6 +51,22 @@ public class Car {
 
     public void setEngine(Engine engine) {
         this.engine = engine;
+    }
+
+    public String getCarBrand() {
+        return carBrand;
+    }
+
+    public void setCarBrand(String carBrand) {
+        this.carBrand = carBrand;
+    }
+
+    public String getBodyType() {
+        return bodyType;
+    }
+
+    public void setBodyType(String bodyType) {
+        this.bodyType = bodyType;
     }
 
     public Set<Driver> getDrivers() {
