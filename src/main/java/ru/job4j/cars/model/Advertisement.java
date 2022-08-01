@@ -20,6 +20,8 @@ public class Advertisement {
 
     private byte[] photo;
 
+    private String date;
+
     @ManyToOne
     @JoinColumn(name = "user_id")
     private User user;
@@ -27,10 +29,11 @@ public class Advertisement {
     public Advertisement() {
     }
 
-    public Advertisement(String description, Car car, boolean isSold, User user) {
+    public Advertisement(String description, Car car, boolean isSold, String date, User user) {
         this.description = description;
         this.car = car;
         this.isSold = isSold;
+        this.date = date;
         this.user = user;
     }
 
@@ -72,6 +75,14 @@ public class Advertisement {
 
     public void setPhoto(byte[] photo) {
         this.photo = photo;
+    }
+
+    public String getDate() {
+        return date;
+    }
+
+    public void setDate(String date) {
+        this.date = date;
     }
 
     public User getUser() {
