@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <style>
+        button {
+            border: none;
+        }
+
+        .noBorder {
+            border: none !important;
+        }
+    </style>
+
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css"
+          integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+    <script src="https://code.jquery.com/jquery-3.4.1.slim.min.js"
+            integrity="sha384-J6qa4849blE2+poT4WnyKhv5vZF5SrPo0iEjwBvKU7imGFAV0wwj1yYfoRSJoZ+n"
+            crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js"
+            integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo"
+            crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"
+            integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6"
+            crossorigin="anonymous"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+
+    <title>Площадка продажи машин</title>
+</head>
+<body>
+<div class="container">
+    <nav class="navbar navbar-expand-lg navbar-light bg-light">
+        <a class="navbar-brand">Все задания</a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavAltMarkup" aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
+            <div class="navbar-nav ml-auto">
+                <a class="nav-item nav-link" th:if="${user.name == 'Гость'}" th:href="@{/loginPage}">
+                    <span th:text="${user.name}"></span>
+                    <span> | Войти</span>
+                </a>
+                <a class="nav-item nav-link" th:if="${user.name != 'Гость'}" th:href="@{/logout}">
+                    <span th:text="${user.name}"></span>
+                    <span style="color: red"> | Выйти</span>
+                </a>
+            </div>
+        </div>
+    </nav>
+    <div class="row">
+        <table class="table table-hover">
+            <thead>
+            <tr>
+                <th scope="col">Описание</th>
+                <th scope="col">Категории задачи</th>
+                <th scope="col">Время создания</th>
+                <th scope="col">Состояние задачи</th>
+                <th scope="col">Создатель задачи</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:each="task: ${tasks}">
+                <td th:text="${task.name}"></td>
+                <td>
+                    <table class="table table-hover">
+                        <tr th:each="category : ${task.categories}">
+                            <td class="noBorder" th:text="${category.name}"></td>
+                        </tr>
+                    </table>
+                </td>
+                <td th:text="${#dates.format(task.created, 'dd MMMM yyyy HH:mm')}"></td>
+                <td th:switch="${task.done}">
+                    <span th:case="false">Новое задание</span>
+                    <span th:case="true">Выполнено</span>
+                </td>
+                <td th:text="${task.account.name}"></td>
+                <td>
+                    <a class="nav-item nav-link" th:href="@{|/task/${task.id}|}">
+                        <button type="submit" class="btn btn-primary">Подробнее</button>
+                    </a>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+<!--        <a class="nav-item nav-link" th:href="@{/completedTasks}">-->
+<!--            <button type="submit" class="btn btn-primary" style="background-color: green; border-color: green">Выполненные задания</button>-->
+<!--        </a>-->
+<!--        <a class="nav-item nav-link" th:href="@{/userTasks}">-->
+<!--            <button type="submit" class="btn btn-primary" style="background-color: goldenrod; border-color: goldenrod">Мои задания</button>-->
+<!--        </a>-->
+<!--        <a class="nav-item nav-link" th:href="@{/newTasks}">-->
+<!--            <button type="submit" class="btn btn-primary" style="background-color: darkred; border-color: darkred">Новые задания</button>-->
+<!--        </a>-->
+<!--        <a class="nav-item nav-link" th:href="@{/addTask}">-->
+<!--            <button type="submit" class="btn btn-primary">Добавить задание</button>-->
+<!--        </a>-->
+    </div>
+</div>
+</body>
+</html>

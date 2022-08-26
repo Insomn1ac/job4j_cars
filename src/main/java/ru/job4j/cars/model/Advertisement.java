@@ -22,6 +22,8 @@ public class Advertisement {
 
     private String date;
 
+    private int price;
+
     @ManyToOne
     @JoinColumn(name = "user_id")
     private User user;
@@ -83,6 +85,14 @@ public class Advertisement {
 
     public void setDate(String date) {
         this.date = date;
+    }
+
+    public int getPrice() {
+        return price;
+    }
+
+    public void setPrice(int price) {
+        this.price = price;
     }
 
     public User getUser() {

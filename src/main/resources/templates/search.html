@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <style>
+        table {
+            box-shadow: 0 8px 16px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+        }
+
+        button {
+            border: none;
+            box-shadow: 0 8px 16px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+        }
+
+        .navbar {
+            box-shadow: 0 8px 16px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+        }
+    </style>
+
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css"
+          integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+    <script src="https://code.jquery.com/jquery-3.4.1.slim.min.js"
+            integrity="sha384-J6qa4849blE2+poT4WnyKhv5vZF5SrPo0iEjwBvKU7imGFAV0wwj1yYfoRSJoZ+n"
+            crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js"
+            integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo"
+            crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"
+            integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6"
+            crossorigin="anonymous"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <script src="https://www.kryogenix.org/code/browser/sorttable/sorttable.js"></script>
+    <script>
+        function adRowClick(row) {
+            row.querySelector("a").click();
+        }
+    </script>
+
+    <title>Площадка продажи машин</title>
+</head>
+<body>
+<div class="container">
+    <nav class="navbar navbar-expand-lg navbar-light bg-light">
+        <a class="navbar-brand">Нашлось объявлений по запросу <span th:text="${request}"></span>: <span
+                th:text="${brand.size()}"></span></a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavAltMarkup"
+                aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="navbar-nav mr-auto">
+            <a class="nav-item nav-link" th:href="@{/ads}">Все объявления</a>
+            <a class="nav-item nav-link" th:href="@{/addAdvertisement}">Добавить объявление</a>
+            <a class="nav-item nav-link" th:href="@{/userAds}">Мои объявления</a>
+        </div>
+        <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
+            <div class="navbar-nav ml-auto">
+                <a class="nav-item nav-link" th:if="${user.name == 'Гость'}" th:href="@{/loginPage}">
+                    <span th:text="${user.name}"></span>
+                    <span> | Войти</span>
+                </a>
+                <a class="nav-item nav-link" th:if="${user.name != 'Гость'}" th:href="@{/logout}">
+                    <span th:text="${user.name}"></span>
+                    <span style="color: red"> | Выйти</span>
+                </a>
+            </div>
+        </div>
+    </nav>
+    <div class="row">
+        <table class="table table-hover searchable sortable">
+            <thead th:if="${brand.size() > 0}">
+            <tr style="cursor: pointer">
+                <th scope="col">Фото</th>
+                <th scope="col">Марка</th>
+                <th scope="col">Описание</th>
+                <th scope="col">В продаже?</th>
+                <th scope="col">Дата размещения</th>
+                <th scope="col">Цена</th>
+            </tr>
+            </thead>
+            <tbody th:if="${brand.size() > 0}">
+            <tr th:each="advertisement: ${brand}" style="cursor: pointer" onclick="adRowClick(this)">
+                <td><img th:width="100" th:high="100" th:src="@{|/carPhoto/${advertisement.id}|}"
+                         onerror="this.style.display='none'"></td>
+                <td th:text="${advertisement.car.carBrand}"></td>
+                <td th:text="${advertisement.description}"></td>
+                <td th:switch="${advertisement.isSold}">
+                    <span th:case="false">В продаже</span>
+                    <span th:case="true">Машина продана</span>
+                </td>
+                <td th:text="${advertisement.date}"></td>
+                <td th:text="${advertisement.price}"></td>
+                <td><a th:href="@{|/advertisement/${advertisement.id}|}"></a></td>
+            </tr>
+            </tbody>
+            <thead th:if="${brand.size() == 0}">
+            </thead>
+            <tbody th:if="${brand.size() == 0}">
+            <tr>
+                <td style="text-align: center">К сожалению, по Вашему запросу "<span th:text="${request}"></span>"
+                    ничего не нашлось.
+                </td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+</body>
+</html>

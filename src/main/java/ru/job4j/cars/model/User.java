@@ -12,6 +12,7 @@ public class User {
 
     private String name;
 
+    @Column(unique = true)
     private String email;
 
     private String password;
@@ -60,13 +61,11 @@ public class User {
             return false;
         }
         User user = (User) o;
-        return id == user.id && Objects.equals(name, user.name)
-                && email.equals(user.email)
-                && password.equals(user.password);
+        return id == user.id;
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, name, email, password);
+        return Objects.hash(id);
     }
 }

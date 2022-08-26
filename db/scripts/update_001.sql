@@ -5,7 +5,7 @@ create table engine(
 
 create table car(
     id serial primary key,
-    engine_id int not null unique references engine(id)
+    engine_id int not null references engine(id)
 );
 
 create table driver(
@@ -37,3 +37,4 @@ create table if not exists advertisement(
 alter table car add column car_brand varchar(50);
 alter table car add column body_type varchar(50);
 alter table advertisement add column date varchar(50);
+alter table advertisement add column price int;
