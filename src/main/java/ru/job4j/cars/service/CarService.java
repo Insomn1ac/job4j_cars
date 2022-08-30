@@ -27,6 +27,10 @@ public class CarService {
         return repository.findCarsByBrand(brand);
     }
 
+    public List<Car> findDistinctBrands() {
+        return repository.findDistinctBrands();
+    }
+
     public List<Car> findCarsByBodyType(String bodyType) {
         return repository.findCarsByBodyType(bodyType);
     }
@@ -37,5 +41,9 @@ public class CarService {
 
     public List<Engine> findAllEngines() {
         return repository.findAllEngines();
+    }
+
+    public List<Car> findAllBodyTypes() {
+        return repository.findAllBodyTypes();
     }
 }

@@ -2,7 +2,6 @@ package ru.job4j.cars.service;
 
 import org.springframework.stereotype.Service;
 import ru.job4j.cars.model.Advertisement;
-import ru.job4j.cars.model.Car;
 import ru.job4j.cars.repository.AdRepository;
 
 import java.util.List;
@@ -15,12 +14,8 @@ public class AdService {
         this.store = store;
     }
 
-    public Advertisement addFromList(Advertisement advertisement, List<String> carsId) {
-        return store.addFromList(advertisement, carsId);
-    }
-
-    public Advertisement addNew(Advertisement advertisement) {
-        return store.addNew(advertisement);
+    public Advertisement add(Advertisement advertisement) {
+        return store.add(advertisement);
     }
 
     public List<Advertisement> findAll() {

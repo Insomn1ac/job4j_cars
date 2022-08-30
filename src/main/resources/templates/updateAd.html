@@ -18,14 +18,15 @@
 <body>
 <div class="container">
     <nav class="navbar navbar-expand-lg navbar-light bg-light">
-        <a class="navbar-brand" href="#">Новое объявление о продаже</a>
+        <a class="navbar-brand" href="#">Изменить объявление "<small
+                th:text="${advertisement.car.carBrand} + ' за ' + ${advertisement.price}"></small>"</a>
         <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavAltMarkup" aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
             <span class="navbar-toggler-icon"></span>
         </button>
         <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
             <div class="navbar-nav mr-auto">
                 <a class="nav-item nav-link" th:href="@{/ads}">Все объявления</a>
-                <a class="nav-item nav-link active" th:href="@{/addAdvertisement}">Новое объявление<span class="sr-only">(current)</span></a>
+                <a class="nav-item nav-link" th:href="@{/addAdvertisement}">Новое объявление</a>
             </div>
             <div class="navbar-nav ml-auto">
                 <a class="nav-item nav-link" th:if="${user.name == 'Гость'}" th:href="@{/loginPage}">
@@ -42,48 +43,27 @@
     <div class="row">
         <div class="card" style="width: 100%">
             <div class="card-header">
-                Новое объявление.
+                Редактировать объявление.
             </div>
             <div class="card-body">
-                <form th:action="@{/createAdvertisement}" method="POST" enctype="multipart/form-data">
-                    <input type="hidden" name="id" value="0"/>
-                    <div class="form-group">
-                        <label for="carBrand">Марка автомобиля</label>
-                        <select class="form-control" id="carBrand" th:name="carBrand">
-                            <option th:each="brand: ${carBrands}" th:text="${brand}"></option>
-                        </select>
-                        <a th:href="@{/addNewCarAd}">Не нашли марку Вашего автомобиля в списке?</a>
-                    </div>
-                    <div class="form-group">
-                        <label for="engine">Тип двигателя</label>
-                        <select class="form-control" id="engine" th:name="engine">
-                            <option th:each="engine: ${engines}" th:value="${engine.id}"
-                                    th:text="${engine.description}"></option>
-                        </select>
-                    </div>
-                    <div class="form-group">
-                        <label for="bodyType">Тип кузова</label>
-                        <select class="form-control" id="bodyType" th:name="bodyType">
-                            <option th:each="type: ${bodyType}" th:text="${type}"></option>
-                        </select>
-                    </div>
+                <form th:action="@{/updateAd}" method="POST" th:object="${advertisement}">
+                    <input type="hidden" name="id" th:field="*{id}"/>
                     <div class="form-group">
                         <label for="description">Описание</label>
-                        <input type="text" class="form-control" name="description" id="description">
-                    </div>
-                    <div class="form-group">
-                        <label for="description">Фотография</label>
-                        <input type="file" class="form-control" name="file" id="file">
+                        <input type="text" class="form-control" name="description" id="description" th:field="*{description}">
                     </div>
                     <div class="form-group">
                         <label for="price">Цена</label>
-                        <input type="number" class="form-control" name="price" id="price">
+                        <input type="number" class="form-control" name="price" id="price" th:field="*{price}">
                     </div>
-                    <button type="submit" class="btn btn-outline-primary">Сохранить</button>
+                    <button type="submit" class="btn btn-outline-success">Сохранить</button>
                 </form>
             </div>
         </div>
     </div>
+    <a class="nav-item nav-link">
+        <button type="submit" class="btn btn-outline-primary" style="float: left" onclick="history.back()">Назад</button>
+    </a>
 </div>
 </body>
 </html>

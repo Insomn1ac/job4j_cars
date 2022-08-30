@@ -26,6 +26,10 @@ public class CarRepository implements IStore {
                 sf);
     }
 
+    public List<Car> findDistinctBrands() {
+        return tx(session -> session.createQuery("select distinct carBrand from Car").getResultList(), sf);
+    }
+
     public List<Car> findCarsByBodyType(String bodyType) {
         return tx(session -> session.createQuery("from Car where bodyType = :bodyType")
                         .setParameter("bodyType", bodyType)
@@ -46,5 +50,9 @@ public class CarRepository implements IStore {
 
     public List<Engine> findAllEngines() {
         return tx(session -> session.createQuery("from Engine ").getResultList(), sf);
+    }
+
+    public List<Car> findAllBodyTypes() {
+        return tx(session -> session.createQuery("select distinct bodyType from Car ").getResultList(), sf);
     }
 }

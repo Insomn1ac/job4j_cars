@@ -20,7 +20,6 @@ import javax.servlet.http.HttpSession;
 import java.io.IOException;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
-import java.util.List;
 
 @Controller
 public class AdController {
@@ -59,45 +58,57 @@ public class AdController {
     @GetMapping("/addAdvertisement")
     public String addAdvertisement(Model model, HttpSession session) {
         setAccountToModel(model, session);
-        model.addAttribute("cars", carService.findAll());
+        model.addAttribute("carBrands", carService.findDistinctBrands());
+        model.addAttribute("engines", carService.findAllEngines());
+        model.addAttribute("bodyType", carService.findAllBodyTypes());
         return "addAdvertisement";
-    }
-
-    @PostMapping("/createAdvertisement")
-    public String createAdvertisement(@ModelAttribute Advertisement ad,
-                                      @RequestParam("file") MultipartFile file,
-                                      @RequestParam("cars") List<String> carsId,
-                                      HttpSession session) throws IOException {
-        User user = (User) session.getAttribute("user");
-        ad.setUser(user);
-        ad.setPhoto(file.getBytes());
-        ad.setDate(LocalDateTime.now().format(DateTimeFormatter.ofPattern("dd MMMM yyyy")));
-        adService.addFromList(ad, carsId);
-        return "redirect:/ads";
     }
 
     @GetMapping("/addNewCarAd")
     public String addNewCarAd(Model model, HttpSession session) {
         setAccountToModel(model, session);
         model.addAttribute("engines", carService.findAllEngines());
-        model.addAttribute("bodyTypes", carService.findAll());
+        model.addAttribute("bodyTypes", carService.findAllBodyTypes());
         return "addNewCarAd";
+    }
+
+    private String saveAd(@ModelAttribute Advertisement ad,
+                          @ModelAttribute Car car,
+                          @RequestParam("engine") int engineId,
+                          @RequestParam("bodyType") String bodyType,
+                          @RequestParam("file") MultipartFile file,
+                          HttpSession session) throws IOException {
+        car.setEngine(carService.findEngineById(engineId));
+        car.setBodyType(bodyType);
+        User user = (User) session.getAttribute("user");
+        ad.setUser(user);
+        ad.setCar(carService.add(car));
+        ad.setPhoto(file.getBytes());
+        ad.setDate(LocalDateTime.now().format(DateTimeFormatter.ofPattern("dd MMMM yyyy")));
+        adService.add(ad);
+        return "redirect:/ads";
+    }
+
+    @PostMapping("/createAdvertisement")
+    public String createAdvertisement(@ModelAttribute Advertisement ad,
+                                      @ModelAttribute Car car,
+                                      @RequestParam("carBrand") String carBrand,
+                                      @RequestParam("engine") int engineId,
+                                      @RequestParam("bodyType") String bodyType,
+                                      @RequestParam("file") MultipartFile file,
+                                      HttpSession session) throws IOException {
+        car.setCarBrand(carBrand);
+        return saveAd(ad, car, engineId, bodyType, file, session);
     }
 
     @PostMapping("/createNewCarAd")
     public String createNewCarAd(@ModelAttribute Advertisement ad,
                                  @ModelAttribute Car car,
                                  @RequestParam("engine") int engineId,
+                                 @RequestParam("bodyType") String bodyType,
                                  @RequestParam("file") MultipartFile file,
                                  HttpSession session) throws IOException {
-        User user = (User) session.getAttribute("user");
-        car.setEngine(carService.findEngineById(engineId));
-        ad.setUser(user);
-        ad.setCar(carService.add(car));
-        ad.setPhoto(file.getBytes());
-        ad.setDate(LocalDateTime.now().format(DateTimeFormatter.ofPattern("dd MMMM yyyy")));
-        adService.addNew(ad);
-        return "redirect:/ads";
+        return saveAd(ad, car, engineId, bodyType, file, session);
     }
 
     @GetMapping("/advertisement/{adId}")
@@ -139,6 +150,25 @@ public class AdController {
         model.addAttribute("request", brand);
         model.addAttribute("brand", adService.findAdsWithCertainBrand(brand));
         return "search";
+    }
+
+    @GetMapping("/formUpdateAd/{advertisementId}")
+    public String formUpdateTask(Model model, @PathVariable("advertisementId") int id, HttpSession session) {
+        model.addAttribute("advertisement", adService.findById(id));
+        setAccountToModel(model, session);
+        return "updateAd";
+    }
+
+    @PostMapping("/updateAd")
+    public String updateAdvertisement(@ModelAttribute Advertisement advertisement, int id) {
+        adService.update(advertisement, id);
+        return "redirect:/ads";
+    }
+
+    @GetMapping("/deleteAd/{advertisementId}")
+    public String deleteAdvertisement(Model model, @PathVariable int advertisementId) {
+        model.addAttribute("task", adService.delete(advertisementId));
+        return "redirect:/ads";
     }
 
     @GetMapping("/carPhoto/{advertisementId}")

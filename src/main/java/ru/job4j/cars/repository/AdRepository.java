@@ -4,7 +4,6 @@ import org.hibernate.SessionFactory;
 import org.hibernate.type.StringType;
 import org.springframework.stereotype.Repository;
 import ru.job4j.cars.model.Advertisement;
-import ru.job4j.cars.model.Car;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
@@ -13,31 +12,19 @@ import java.util.List;
 @Repository
 public class AdRepository implements IStore {
     private final SessionFactory sf;
-    private final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy");
+    private final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd MMMM yyyy");
 
     public AdRepository(SessionFactory sf) {
         this.sf = sf;
     }
 
-    public Advertisement addFromList(Advertisement advertisement, List<String> carsId) {
-        tx(session -> {
-                    for (String id : carsId) {
-                        Car car = session.get(Car.class, Integer.parseInt(id));
-                        advertisement.setCar(car);
-                    }
-                    return session.save(advertisement);
-                },
-                sf);
-        return advertisement;
-    }
-
-    public Advertisement addNew(Advertisement advertisement) {
+    public Advertisement add(Advertisement advertisement) {
         tx(session -> session.save(advertisement), sf);
         return advertisement;
     }
 
     public List<Advertisement> findAll() {
-        return tx(session -> session.createQuery("select distinct ad from Advertisement ad order by date desc, price desc", Advertisement.class)
+        return tx(session -> session.createQuery("from Advertisement ad order by date desc, price desc", Advertisement.class)
                 .getResultList(), sf);
     }
 
@@ -74,11 +61,11 @@ public class AdRepository implements IStore {
 
     public boolean update(Advertisement advertisement, int id) {
         return tx(session -> session.createQuery("update Advertisement ad "
-                                + "set ad.date = :date, ad.description = :description, ad.isSold = :isSold "
+                                + "set ad.date = :date, ad.description = :description, ad.price = :price "
                                 + "where ad.id = :id")
                         .setParameter("date", LocalDateTime.now().format(formatter))
                         .setParameter("description", advertisement.getDescription())
-                        .setParameter("isSold", advertisement.isSold())
+                        .setParameter("price", advertisement.getPrice())
                         .setParameter("id", id)
                         .executeUpdate(),
                 sf) > 0;

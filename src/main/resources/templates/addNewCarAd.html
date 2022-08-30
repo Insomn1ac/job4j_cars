@@ -65,7 +65,9 @@
                     </div>
                     <div class="form-group">
                         <label for="bodyType">Тип кузова</label>
-                        <input type="text" class="form-control" name="bodyType" id="bodyType">
+                        <select class="form-control" id="bodyType" th:name="bodyType">
+                            <option th:each="type: ${bodyTypes}" th:text="${type}"></option>
+                        </select>
                     </div>
                     <div class="form-group">
                         <label for="description">Описание</label>
@@ -79,7 +81,7 @@
                         <label for="price">Цена</label>
                         <input type="number" class="form-control" name="price" id="price">
                     </div>
-                    <button type="submit" class="btn btn-primary">Сохранить</button>
+                    <button type="submit" class="btn btn-outline-primary">Сохранить</button>
                 </form>
             </div>
         </div>

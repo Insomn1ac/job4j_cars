@@ -34,8 +34,12 @@ Web-приложение для продажи машин.
 ![advertisement](src/main/resources/attachments/advertisement.png)
 Возможность продать автомобиль (нажать кнопку "продано") имеется только у аккаунта-создателя этого объявления.
 В этом случае статус автомобиля меняется на "Машина продана".
+Также только у создателя есть возможность отредактировать или удалить объявление.
 При наведении на фото курсора - фото увеличивается:
 ![adPhotoOnMouseOver](src/main/resources/attachments/adPhotoOnMouseOver.png)
+
+Страница редактирования объявления:
+![updateAdvertisement](src/main/resources/attachments/updateAd.png)
 
 Страница добавления нового объявления:
 ![newAd](src/main/resources/attachments/newAdWithBrandFromList.png)

@@ -113,8 +113,18 @@
             </tbody>
         </table>
         <a class="nav-item nav-link">
-            <button type="submit" class="btn btn-primary" style="float: right" onclick="history.back()">Назад</button>
+            <button type="submit" class="btn btn-outline-primary" style="float: right" onclick="history.back()">Назад</button>
         </a>
+        <span th:if="${user.getId().equals(advertisement.user.getId()) and advertisement.isSold() != true}">
+        <a class="nav-item nav-link" th:href="@{|/formUpdateAd/${advertisement.id}|}">
+            <button type="submit" class="btn btn-outline-warning">Редактировать</button>
+        </a>
+        </span>
+        <span th:if="${user.getId().equals(advertisement.user.getId())}">
+        <a class="nav-item nav-link" th:href="@{|/deleteAd/${advertisement.id}|}">
+            <button type="submit" class="btn btn-outline-danger">Удалить объявление</button>
+        </a>
+        </span>
     </div>
 </div>
 </body>
